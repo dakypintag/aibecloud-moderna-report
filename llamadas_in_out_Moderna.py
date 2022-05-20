@@ -50,20 +50,33 @@ def run():
 
     # STATUS
     conditions = [
-        (df['WHYCALL'] == 'UT'),
-        (df['WHYCALL'] == 'CI'),
-        (df['WHYCALL'] == 'CO'),
-        (df['WHYCALL'] == 'NE'),
-        (df['WHYCALL'] == 'NL'),
-        (df['WHYCALL'] == 'NC'),
-        (df['WHYCALL'] == 'CA'),
-        (df['WHYCALL'] == 'OT'),
-        (df['WHYCALL'] == 'SC'),
-        (df['WHYCALL'] == 'NT'),
-        (df['WHYCALL'] == 'TE'),
-        (df['WHYCALL'] == 'XX')
+        (df['WHYCALL'] == 'UT'),    # 1
+        (df['WHYCALL'] == 'CI'),    # 2
+        (df['WHYCALL'] == 'CO'),    # 3
+        (df['WHYCALL'] == 'NE'),    # 4
+        (df['WHYCALL'] == 'NL'),    # 5
+        (df['WHYCALL'] == 'NC'),    # 6
+        (df['WHYCALL'] == 'CA'),    # 7
+        (df['WHYCALL'] == 'OT') & (df['DURACION-SEG'] > 32),    # 8
+        (df['WHYCALL'] == 'SC'),    # 9
+        (df['WHYCALL'] == 'NT'),    # 10
+        (df['WHYCALL'] == 'TE'),    # 11
+        (df['WHYCALL'] == 'XX')    # 12
     ]
-    results = ['EFECTIVA','EFECTIVA','EFECTIVA','EFECTIVA','NO EFECTIVA','NO EFECTIVA','NO EFECTIVA','NO EFECTIVA','NO EFECTIVA','NO EFECTIVA','NO EFECTIVA','EFECTIVA']
+    results = [
+        'EFECTIVA',    # 1
+        'EFECTIVA',    # 2
+        'EFECTIVA',    # 3
+        'EFECTIVA',    # 4
+        'NO EFECTIVA',    # 5
+        'NO EFECTIVA',    # 6
+        'NO EFECTIVA',    # 7
+        'EFECTIVA',    # 8
+        'NO EFECTIVA',    # 9
+        'NO EFECTIVA',    # 10
+        'NO EFECTIVA',    # 11
+        'EFECTIVA'    # 12
+    ]
     df['STATUS'] = np.select(conditions,results)
 
     # PREFIJO
@@ -83,7 +96,7 @@ def run():
     df2['TIPO'] = df['DIRECCION']
     # NUMERO = TELEFONO
     df2['NUMERO'] = df['TELEFONO']
-    
+    df2.to_excel('REPORTE_LLAMADAS_IN_OUT_AIBECLOUD_git.xlsx', index = False) # index = False  -> allow skip index column
     
     # LLAMADA-POR-MARCA = COLA . Cambiar MODERNA_200 por 200-300
     df2['LLAMADA-POR-MARCA'] = df['COLA']
@@ -140,7 +153,7 @@ def run():
     # df_final = df[['FECHA-CORTA','DIA','HORA','MINUTO','DURACION-SEG','COLA','DIRECCION','STATUS','PREFIJO']]
     # df_final.to_excel('aibe.xlsx', index=False)
     # print(df[['FECHA-CORTA','DIA','HORA','MINUTO','DURACION-SEG','COLA','DIRECCION','STATUS','PREFIJO']][12:35])
-    # df.to_excel('REPORTE_LLAMADAS_IN_OUT_AIBECLOUD.xlsx', index = False) # index = False  -> allow skip index column
+    # df.to_excel('REPORTE_LLAMADAS_IN_OUT_AIBECLOUD_git.xlsx', index = False) # index = False  -> allow skip index column
 if __name__ == '__main__':
     run()
 
