@@ -35,7 +35,7 @@ def run():
         (df['VDN'] != '')
     ]
 
-    results2 = ['200_300','YAYAYA','CAYAMBE','']
+    results2 = ['200-300','YAYAYA','CAYAMBE','']
     df['COLA'] = np.select(conditions2, results2)
     # print(df['COLA'])
 
@@ -87,6 +87,14 @@ def run():
     results3 = ['33','']
     df['PREFIJO'] = np.select(conditions3, results3)
 
+    dfIn = df[df.DIRECCION == 'INBOUND']
+    dfIn['DIA-NOMBRE'] = df['FECHA'].dt.day_name()
+    # print(dfIn['DIA-NOMBRE'].tail(15))
+    tablaInHoraDia = pd.pivot_table(data = dfIn, index=['HORA'], values= 'DIRECCION', columns =['DIA','DIA-NOMBRE'], aggfunc= 'count', margins= True, margins_name= 'Por dia')
+    print(tablaInHoraDia)
+
+    # print(dfIn.head(30))
+
     df2 = df
     # FECHA = FECHA-CORTA
     df2['FECHA'] = df['FECHA-CORTA']
@@ -96,6 +104,7 @@ def run():
     df2['TIPO'] = df['DIRECCION']
     # NUMERO = TELEFONO
     df2['NUMERO'] = df['TELEFONO']
+
     df2.to_excel('REPORTE_LLAMADAS_IN_OUT_AIBECLOUD_git.xlsx', index = False) # index = False  -> allow skip index column
     
     # LLAMADA-POR-MARCA = COLA . Cambiar MODERNA_200 por 200-300
@@ -140,10 +149,10 @@ def run():
 
     df2['INTERACCION-POR'] = df['ORIGEN'] 
     df3=df2[['FECHA','CALLID','TIPO','NUMERO','INTERACCION', 'LLAMADA-POR-MARCA','CODIGO','DETALLE','CLASIFICACION','DURACION-SEG','CONTACTO','STATUS','INTERACCION-POR']]
-    print(df3.head(10))
+    # print(df3.head(10))
     b1 = ['7YZPLOVQ2','27NIL7EK3C','M2FX81KHYO','7X4HM7GBP','7X4HM7GBP','27HSDEHGTL','M2Z55FHQXM','27I1EXS26G','27I1GKA64F','7X7SK3OMZ','M31P6Z9HNX']
     df4 = df3[df3['CALLID'].isin(b1)]
-    print(df4.sort_values(by=['DURACION-SEG']))
+    # print(df4.sort_values(by=['DURACION-SEG']))
     
     # print(df2[['FECHA','CALLID','TIPO','NUMERO','INTERACCION', 'LLAMADA-POR-MARCA','CODIGO','DETALLE','CLASIFICACION','CONTACTO','STATUS','INTERACCION-POR']].head(20))
     df2[['FECHA','CALLID','TIPO','NUMERO','INTERACCION', 'LLAMADA-POR-MARCA','CODIGO','DETALLE','CONTACTO','STATUS','INTERACCION-POR']].to_excel('tabla-interacciones4.xlsx', index = False)
@@ -159,8 +168,7 @@ if __name__ == '__main__':
 
 
     # df['STATUS'] = ['EFECTIVA' if x == 'UT' else '' for x in df['WHYCALL']]
-    # df['STATUS'] = ['EFECTIVA' if x == 'CI' else '' for x in df['WHYCALL']]
-    # df['STATUS'] = ['EFECTIVA' if x == 'CO' else '' for x in df['WHYCALL']]
+    # df['STATUS'] = ['EFECTIVA' if x == 'CI' else '' for x in df['WHYCALL']]    # df['STATUS'] = ['EFECTIVA' if x == 'CO' else '' for x in df['WHYCALL']]
     # df['STATUS'] = ['EFECTIVA' if x == 'NE' else '' for x in df['WHYCALL']]
     # df['STATUS'] = ['NO EFECTIVA' if x == 'NL' else '' for x in df['WHYCALL']]
     # df['STATUS'] = ['NO EFECTIVA' if x == 'NC' else '' for x in df['WHYCALL']]
